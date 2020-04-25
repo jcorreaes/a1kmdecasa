@@ -67,21 +67,21 @@ export default {
       places: [],
       currentPlace: null,
       zoom: 15,
-      center: latLng(40.389949,-3.6893311),
+      center: latLng(40.3915307,-3.6974064),
       url: 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',
       attribution:
         '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
       showParagraph: false,
-      updatedCenter: [40.399949,-3.6903311],
+      updatedCenter: [40.3928565,-3.6992007],
       circle: {
-        center: [40.389949,-3.6893311],
+        center: [40.3915307,-3.6974064],
         radius: 1000,
         color: '#1CD89A',
         weight: 2,
         fillColor: '#1CD89A'
       },
       circlemarker: {
-        center: [40.389949,-3.6893311],
+        center: [40.3915307,-3.6974064],
         radius: 6,
         stroke: false,
         fillColor: '#006DDC',
