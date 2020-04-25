@@ -22,17 +22,6 @@
         :fillColor="circle.fillColor"
         />
       <l-circle-marker
-        :lat-lng="center"
-        :radius="circlemarker.radius"
-        :stroke="circle.stroke"
-        :fillColor="circlemarker.fillColor"
-        :fillOpacity="circlemarker.fillOpacity"
-        >
-        <l-tooltip :options="{ permanent: true, direction:'top' }">
-          🏠
-        </l-tooltip>
-      </l-circle-marker>
-      <l-circle-marker
         :lat-lng="updatedCenter"
         :radius="circlemarker.radius"
         :stroke="circle.stroke"
@@ -43,13 +32,30 @@
           🏃‍♀️
         </l-tooltip>
       </l-circle-marker>
+      <l-marker
+        :lat-lng.sync="center"
+        :radius="circlemarker.radius"
+        :stroke="circle.stroke"
+        :draggable="draggable"
+        :fillColor="circlemarker.fillColor"
+        :fillOpacity="circlemarker.fillOpacity"
+        >
+        <l-icon
+          :icon-size="dynamicSize"
+          :icon-anchor="dynamicAnchor"
+          icon-url="icons8-marker-40.png"
+        />
+        <l-tooltip :options="{ permanent: true, direction:'top' }">
+          🏠
+        </l-tooltip>
+      </l-marker>
     </l-map>
   </div>
 </template>
 
 <script>
 import { latLng } from "leaflet";
-import { LMap, LTileLayer, LCircleMarker, LCircle, LControlScale, LTooltip } from "vue2-leaflet";
+import { LMap, LTileLayer, LCircleMarker, LMarker, LCircle, LControlScale, LTooltip, LIcon } from "vue2-leaflet";
 
 export default {
   name: "Example",
@@ -57,16 +63,20 @@ export default {
     LMap,
     LTileLayer,
     LCircleMarker,
+    LMarker,
     LCircle,
     LControlScale,
-    LTooltip
+    LTooltip,
+    LIcon
   },
   data() {
     return {
+      publicPath: process.env.BASE_URL,
       markers: [],
       places: [],
       currentPlace: null,
       zoom: 15,
+      draggable: true,
       center: latLng(40.3915307,-3.6974064),
       url: 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',
       attribution:
@@ -92,6 +102,14 @@ export default {
       },
       showMap: true
     };
+  },
+  computed: {
+    dynamicSize() {
+      return [this.iconSize, this.iconSize * 1.15];
+    },
+    dynamicAnchor() {
+      return [this.iconSize / 2, this.iconSize * 1.15];
+    }
   },
   mounted() {
     this.geolocate();
