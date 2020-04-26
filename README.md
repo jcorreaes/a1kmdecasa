@@ -1,5 +1,7 @@
 # a1kmdecasa
 
+Deployed @ https://a1kmdecasa.now.sh/
+
 ## Project setup
 ```
 npm install
