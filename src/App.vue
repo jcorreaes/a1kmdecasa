@@ -1,64 +1,58 @@
-<template>
-
-  <div style="height: 100vh; width: 100%" id="app" v-cloak>
-    <l-map
-      v-if="showMap"
-      :zoom="zoom"
-      :center="center"
-      :options="mapOptions"
-      style="height: 100%"
-    >
-      <l-tile-layer
-        :url="url"
-        :attribution="attribution"
-      />
-      <l-control-scale position="topright" :imperial="false" :metric="true"></l-control-scale>
-      <l-circle
-        :lat-lng="center"
-        :radius="circle.radius"
-        :stroke="circle.stroke"
-        :color="circle.color"
-        :weight="circle.weight"
-        :fillColor="circle.fillColor"
-        />
-      <l-circle-marker
-        :lat-lng="updatedCenter"
-        :radius="circlemarker.radius"
-        :stroke="circle.stroke"
-        :fillColor="circlemarker.fillColor"
-        :fillOpacity="circlemarker.fillOpacity"
-        >
-        <l-tooltip :options="{ permanent: true, direction:'top' }">
-          🏃‍♀️
-        </l-tooltip>
-      </l-circle-marker>
-      <l-marker
-        :lat-lng.sync="center"
-        :radius="circlemarker.radius"
-        :stroke="circle.stroke"
-        :draggable="draggable"
-        :fillColor="circlemarker.fillColor"
-        :fillOpacity="circlemarker.fillOpacity"
-        >
-        <l-icon
-          :icon-size="dynamicSize"
-          :icon-anchor="dynamicAnchor"
-          icon-url="icons8-marker-40.png"
-        />
-        <l-tooltip :options="{ permanent: true, direction:'top' }">
-          🏠
-        </l-tooltip>
-      </l-marker>
-    </l-map>
-  </div>
+<template lang="pug">
+div(
+  style="height: 100vh; width: 100%"
+  id="app"
+  v-cloak
+  )
+  l-map(
+    v-if="showMap"
+    :zoom="zoom"
+    :center="center"
+    :options="mapOptions"
+    style="height: 100%"
+    )
+    l-tile-layer(
+      :url="url"
+      :attribution="attribution"
+      )
+    l-control-scale( position="topright" :imperial="false" :metric="true" )
+    l-circle(
+      :lat-lng="center"
+      :radius="circle.radius"
+      :stroke="circle.stroke"
+      :color="circle.color"
+      :weight="circle.weight"
+      :fillColor="circle.fillColor"
+      )
+    l-circle-marker(
+      :lat-lng="updatedCenter"
+      :radius="circlemarker.radius"
+      :stroke="circle.stroke"
+      :fillColor="circlemarker.fillColor"
+      :fillOpacity="circlemarker.fillOpacity"
+      )
+      l-tooltip( :options="{ permanent: true, direction:'top' }" ) 🏃‍♀️
+    l-marker(
+      :lat-lng.sync="center"
+      :radius="circlemarker.radius"
+      :stroke="circle.stroke"
+      :draggable="draggable"
+      :fillColor="circlemarker.fillColor"
+      :fillOpacity="circlemarker.fillOpacity"
+      )
+      l-icon(
+        :icon-size="dynamicSize"
+        :icon-anchor="dynamicAnchor"
+        icon-url="icons8-marker-40.png"
+        )
+      l-tooltip( :options="{ permanent: true, direction:'top' }" ) 🏠
 </template>
-
 <script>
 import { latLng } from "leaflet";
 import { LMap, LTileLayer, LCircleMarker, LMarker, LCircle, LControlScale, LTooltip, LIcon } from "vue2-leaflet";
 
 export default {
-  name: "Example",
+  name: 'App',
   components: {
     LMap,
     LTileLayer,
@@ -71,17 +65,12 @@ export default {
   },
   data() {
     return {
-      publicPath: process.env.BASE_URL,
-      markers: [],
-      places: [],
-      currentPlace: null,
       zoom: 15,
       draggable: true,
       center: latLng(40.3915307,-3.6974064),
       url: 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',
       attribution:
         '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
-      showParagraph: false,
       updatedCenter: [40.3928565,-3.6992007],
       circle: {
         center: [40.3915307,-3.6974064],
@@ -135,22 +124,18 @@ export default {
   }
 };
 </script>
-
-<style>
-body {
-  margin: 0;
-  padding: 0;
-  height: 100%;
-  width: 100%;
-}
-#app {
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
-.leaflet-tooltip {
-  font-size: 36px;
-  padding: 4px 10px !important
-}
+<style lang="sass">
+body
+  margin: 0
+  padding: 0
+  height: 100%
+  width: 100%
+  #app
+    -webkit-font-smoothing: antialiased
+    -moz-osx-font-smoothing: grayscale
+    text-align: center
+    color: #2c3e50
+    .leaflet-tooltip
+      font-size: 36px
+      padding: 4px 10px !important
 </style>
