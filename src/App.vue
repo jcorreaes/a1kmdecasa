@@ -15,7 +15,11 @@ div(
       :url="url"
       :attribution="attribution"
       )
-    l-control-scale( position="topright" :imperial="false" :metric="true" )
+    l-control-scale(
+      position="topright"
+      :imperial="false"
+      :metric="true"
+      )
     l-circle(
       :lat-lng="center"
       :radius="circle.radius"
@@ -31,7 +35,9 @@ div(
       :fillColor="circlemarker.fillColor"
       :fillOpacity="circlemarker.fillOpacity"
       )
-      l-tooltip( :options="{ permanent: true, direction:'top' }" ) 🏃‍♀️
+      l-tooltip(
+        :options="{ permanent: true, direction:'top' }"
+        ) 🏃‍♀️
     l-marker(
       :lat-lng.sync="center"
       :radius="circlemarker.radius"
@@ -45,7 +51,9 @@ div(
         :icon-anchor="dynamicAnchor"
         icon-url="icons8-marker-40.png"
         )
-      l-tooltip( :options="{ permanent: true, direction:'top' }" ) 🏠
+      l-tooltip(
+        :options="{ permanent: true, direction:'top' }"
+        ) 🏠
 </template>
 <script>
 import { latLng } from "leaflet";
