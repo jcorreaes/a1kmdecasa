@@ -149,7 +149,8 @@ export default {
     }
   },
   async created () {
-    const response = await fetch('https://a1kmdecasa.now.sh/Calles_Peatonales_20200513.geojson');
+    var host = window.location.href;
+    const response = await fetch(host+'data/geojson/Calles_Peatonales_20200513.geojson');
     this.geojson = await response.json();
   }
 };
