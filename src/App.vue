@@ -20,6 +20,10 @@ div(
       :imperial="false"
       :metric="true"
       )
+    l-geo-json(
+      :geojson="geojson"
+      :options-style="styleFunction"
+      )
     l-circle(
       :lat-lng="center"
       :radius="circle.radius"
@@ -57,7 +61,7 @@ div(
 </template>
 <script>
 import { latLng } from "leaflet";
-import { LMap, LTileLayer, LCircleMarker, LMarker, LCircle, LControlScale, LTooltip, LIcon } from "vue2-leaflet";
+import { LMap, LTileLayer, LCircleMarker, LMarker, LCircle, LControlScale, LTooltip, LIcon, LGeoJson } from "vue2-leaflet";
 
 export default {
   name: 'App',
@@ -69,13 +73,15 @@ export default {
     LCircle,
     LControlScale,
     LTooltip,
-    LIcon
+    LIcon,
+    LGeoJson
   },
   data() {
     return {
       zoom: 15,
       draggable: true,
       center: latLng(40.3915307,-3.6974064),
+      geojson: null,
       url: 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',
       attribution:
         '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
@@ -106,6 +112,18 @@ export default {
     },
     dynamicAnchor() {
       return [this.iconSize / 2, this.iconSize * 1.15];
+    },
+    styleFunction() {
+      const fillColor = this.fillColor; // important! need touch fillColor in computed for re-calculate when change fillColor
+      return () => {
+        return {
+          weight: 2,
+          color: "#1CD89A",
+          opacity: 1,
+          fillColor: fillColor,
+          fillOpacity: 0.3
+        };
+      };
     }
   },
   mounted() {
@@ -129,6 +147,10 @@ export default {
         };
       });
     }
+  },
+  async created () {
+    const response = await fetch('https://a1kmdecasa.now.sh/Calles_Peatonales_20200513.geojson');
+    this.geojson = await response.json();
   }
 };
 </script>
