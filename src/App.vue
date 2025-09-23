@@ -43,7 +43,7 @@ div(
         :options="{ permanent: true, direction:'top' }"
         ) 🏃‍♀️
     l-marker(
-      :lat-lng.sync="center"
+      v-model:lat-lng="center"
       :radius="circlemarker.radius"
       :stroke="circle.stroke"
       :draggable="draggable"
@@ -61,7 +61,7 @@ div(
 </template>
 <script>
 import { latLng } from "leaflet";
-import { LMap, LTileLayer, LCircleMarker, LMarker, LCircle, LControlScale, LTooltip, LIcon, LGeoJson } from "vue2-leaflet";
+import { LMap, LTileLayer, LCircleMarker, LMarker, LCircle, LControlScale, LTooltip, LIcon, LGeoJson } from "@vue-leaflet/vue-leaflet";
 
 export default {
   name: 'App',
@@ -90,6 +90,7 @@ export default {
       circle: {
         center: [40.3915307,-3.6974064],
         radius: 1000,
+        stroke: true,
         color: '#1CD89A',
         weight: 2,
         fillColor: '#1CD89A'
@@ -156,7 +157,7 @@ export default {
       console.warn('Geolocation error', error);
     }
   },
-  beforeDestroy() {
+  beforeUnmount() {
     if (this.watchId !== null && navigator.geolocation) {
       navigator.geolocation.clearWatch(this.watchId);
     }
