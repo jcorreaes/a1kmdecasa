@@ -81,11 +81,12 @@ export default {
       zoom: 15,
       draggable: true,
       center: latLng(40.3915307,-3.6974064),
+      iconSize: 40,
       geojson: null,
       url: 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',
       attribution:
         '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
-      updatedCenter: [40.3928565,-3.6992007],
+      updatedCenter: latLng(40.3928565,-3.6992007),
       circle: {
         center: [40.3915307,-3.6974064],
         radius: 1000,
@@ -103,7 +104,8 @@ export default {
       mapOptions: {
         zoomSnap: 0.5
       },
-      showMap: true
+      showMap: true,
+      watchId: null
     };
   },
   computed: {
@@ -114,7 +116,7 @@ export default {
       return [this.iconSize / 2, this.iconSize * 1.15];
     },
     styleFunction() {
-      const fillColor = this.fillColor; // important! need touch fillColor in computed for re-calculate when change fillColor
+      const fillColor = this.circle.fillColor; // touch fillColor to keep leaflet layer reactive
       return () => {
         return {
           weight: 2,
@@ -128,45 +130,69 @@ export default {
   },
   mounted() {
     this.geolocate();
-    this.watchposition();
+    this.watchPosition();
   },
   methods:  {
     geolocate:  function()  {
+      if (!navigator.geolocation) {
+        console.warn('Geolocation is not supported by this browser.');
+        return;
+      }
+
       navigator.geolocation.getCurrentPosition(position => {
-        this.center = {
-          lat: position.coords.latitude,
-          lng: position.coords.longitude
-        };
-      });
+        this.center = latLng(position.coords.latitude, position.coords.longitude);
+      }, this.handleGeolocationError);
     },
-    watchposition:  function()  {
-      navigator.geolocation.watchPosition(position => {
-        this.updatedCenter = {
-          lat: position.coords.latitude,
-          lng: position.coords.longitude
-        };
-      });
+    watchPosition:  function()  {
+      if (!navigator.geolocation) {
+        return;
+      }
+
+      this.watchId = navigator.geolocation.watchPosition(position => {
+        this.updatedCenter = latLng(position.coords.latitude, position.coords.longitude);
+      }, this.handleGeolocationError);
+    },
+    handleGeolocationError(error) {
+      console.warn('Geolocation error', error);
+    }
+  },
+  beforeDestroy() {
+    if (this.watchId !== null && navigator.geolocation) {
+      navigator.geolocation.clearWatch(this.watchId);
     }
   },
   async created () {
-    var host = window.location.href;
-    const response = await fetch(host+'data/geojson/Calles_Peatonales_20200513.geojson');
-    this.geojson = await response.json();
+    try {
+      const url = new URL('data/geojson/Calles_Peatonales_20200513.geojson', window.location.origin);
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`Failed to load geojson: ${response.status}`);
+      }
+      this.geojson = await response.json();
+    } catch (error) {
+      console.error('Unable to load geojson data', error);
+      this.showMap = false;
+    }
   }
 };
 </script>
-<style lang="sass">
-body
-  margin: 0
-  padding: 0
-  height: 100%
-  width: 100%
-  #app
-    -webkit-font-smoothing: antialiased
-    -moz-osx-font-smoothing: grayscale
-    text-align: center
-    color: #2c3e50
-    .leaflet-tooltip
-      font-size: 36px
-      padding: 4px 10px !important
+<style lang="scss">
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+
+  #app {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-align: center;
+    color: #2c3e50;
+
+    .leaflet-tooltip {
+      font-size: 36px;
+      padding: 4px 10px !important;
+    }
+  }
+}
 </style>
